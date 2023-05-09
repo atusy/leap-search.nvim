@@ -1,5 +1,5 @@
 ---@class matchopts
-
+---@field engine? "vim.regex"
 ---@field ignorecase boolean?
 ---@field magic boolean?
 ---@field smartcase boolean?
@@ -8,8 +8,10 @@
 ---@param opts matchopts?
 ---@return boolean
 local function leap(pat, opts)
+  local o = opts or {}
+  local engine = o.engine or "vim.regex"
   -- search for leap targets
-  local targets = require("leap-search.engine.vim.regex").search(pat, 0, opts or {})
+  local targets = require("leap-search.engine." .. engine).search(pat, 0, o)
   if #targets == 0 then
     return false
   end
