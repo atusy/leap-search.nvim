@@ -61,7 +61,7 @@ local function flag(pat, opts)
   if o.ic and o.sc and string.match(pat, "[A-Z]") then
     o.ic = false
   end
-  local prefix = "" .. (o.ma and "\\m" or "") .. (o.ic and "\\c" or "")
+  local prefix = "" .. (o.ma and "\\m" or "\\M") .. (o.ic and "\\c" or "\\C")
   return prefix .. pat
 end
 
