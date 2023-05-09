@@ -1,19 +1,19 @@
----@class matchopts
+---@class Opts_match
 ---@field engine? "vim.regex"
 ---@field ignorecase boolean?
 ---@field magic boolean?
 ---@field smartcase boolean?
 ---@field hl_group? string
-local opts_default = {
+local opts_match_default = {
   engine = "vim.regex",
   hl_group = "Search"
 }
 
 ---@param pat string
----@param opts matchopts?
+---@param opts_match Opts_match?
 ---@return boolean
-local function leap(pat, opts)
-  local o = vim.tbl_deep_extend("keep", opts or {}, opts_default)
+local function leap(pat, opts_match)
+  local o = vim.tbl_deep_extend("keep", opts_match or {}, opts_match_default)
   -- search for leap targets
   local targets = require("leap-search.engine." .. o.engine).search(pat, 0, o)
   if #targets == 0 then

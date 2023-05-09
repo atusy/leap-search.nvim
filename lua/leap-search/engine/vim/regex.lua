@@ -48,10 +48,10 @@ end
 
 
 ---@param pat string
----@param opts matchopts
-local function flag(pat, opts)
+---@param opts_match Opts_match
+local function flag(pat, opts_match)
   local o = {}
-  for k, v in pairs(opts) do
+  for k, v in pairs(opts_match) do
     if v == nil then
       o[k] = vim.o[k]
     else
@@ -69,11 +69,11 @@ end
 
 ---@param pat string
 ---@param win integer
----@param opts matchopts?
+---@param opts_match Opts_match?
 ---@return {pos: {[1]: integer, [2]: integer}}[]
-local function search(pat, win, opts)
+local function search(pat, win, opts_match)
   local ret = {}
-  local matches = gmatch_win(vim.regex(flag(pat, opts or {})), win)
+  local matches = gmatch_win(vim.regex(flag(pat, opts_match or {})), win)
   for _, m in pairs(matches) do
     for _, col in pairs(m[2]) do
       table.insert(ret, { pos = { m[1] + 1, col[1] + 1, col[2] + 1 } })
