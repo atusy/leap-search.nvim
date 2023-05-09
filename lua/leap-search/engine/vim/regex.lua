@@ -50,7 +50,7 @@ end
 ---@param opts_match Opts_match
 local function flag(pat, opts_match)
   local o = {}
-  for k, v in pairs(opts_match) do
+  for k, v in pairs({"ignorecase", "magic", "smartcase"}) do
     if v == nil then
       o[k] = vim.o[k]
     else
