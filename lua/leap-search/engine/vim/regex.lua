@@ -64,12 +64,10 @@ local function flag(pat, opts_match)
   return prefix .. pat
 end
 
----@alias pos {[1]: integer, [2]: integer}[]
-
 ---@param pat string
 ---@param win integer
 ---@param opts_match Opts_match?
----@return {pos: {[1]: integer, [2]: integer}}[]
+---@return {pos: {[1]: integer, [2]: integer, [3]: integer}}[]
 local function search(pat, win, opts_match)
   local ret = {}
   local matches = gmatch_win(vim.regex(flag(pat, opts_match or {})), win)
