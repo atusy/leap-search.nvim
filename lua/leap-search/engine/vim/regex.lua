@@ -50,7 +50,7 @@ end
 ---@param opts_match Opts_match
 local function flag(pat, opts_match)
   local o = {}
-  for k, v in pairs({"ignorecase", "magic", "smartcase"}) do
+  for k, v in pairs({ "ignorecase", "magic", "smartcase" }) do
     if v == nil then
       o[k] = vim.o[k]
     else
@@ -65,14 +65,20 @@ local function flag(pat, opts_match)
 end
 
 ---@param pat string
----@param win integer
----@param opts_match Opts_match?
-local function search(pat, win, opts_match)
+---@param opts_match Opts_match
+---@param opts_leap table
+local function search(pat, opts_match, opts_leap)
   local ret = {} ---@type {pos: {[1]: integer, [2]: integer, [3]: integer}}[]
-  local matches = gmatch_win(vim.regex(flag(pat, opts_match or {})), win)
-  for _, m in pairs(matches) do
-    for _, col in pairs(m[2]) do
-      table.insert(ret, { pos = { m[1] + 1, col[1] + 1, col[2] + 1 } })
+  for _, w in pairs(opts_leap.target_windows or { vim.api.nvim_get_current_win() }) do
+    local matches = gmatch_win(vim.regex(flag(pat, opts_match or {})), w)
+    local wininfo = vim.fn.getwininfo(w)[1]
+    for _, m in pairs(matches) do
+      for _, col in pairs(m[2]) do
+        table.insert(ret, {
+          pos = { m[1] + 1, col[1] + 1, col[2] + 1 },
+          wininfo = wininfo
+        })
+      end
     end
   end
   return ret

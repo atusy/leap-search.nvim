@@ -9,14 +9,28 @@ local opts_match_default = {
   hl_group = "Search",
 }
 
+local function action(t)
+  local r, c = t.pos[1], t.pos[2] + (t.offset or 0)
+  require("leap.jump")["jump-to!"]({ r, c }, {
+    winid = vim.api.nvim_get_current_win(),
+    ["add_to_jumplist?"] = true,
+    mode = "n",
+    offset = 0,
+    ["backward?"] = false,
+    ["inclusive_op?"] = true,
+  })
+end
+
 ---@param pat string
 ---@param opts_match Opts_match?
+---@param opts_leap table?
 ---@return boolean
-local function leap(pat, opts_match)
-  local o = vim.tbl_deep_extend("keep", opts_match or {}, opts_match_default)
+local function leap(pat, opts_match, opts_leap)
+  local _opts_match = vim.tbl_deep_extend("force", opts_match or {}, opts_match_default)
+  local _opts_leap = vim.tbl_deep_extend("keep", opts_leap or {}, { action = action })
   -- search for leap targets
-  local targets = require("leap-search.engine." .. o.engine).search(pat, 0, o)
-  if #targets == 0 then
+  _opts_leap.targets = require("leap-search.engine." .. _opts_match.engine).search(pat, _opts_match, _opts_leap)
+  if #_opts_leap.targets == 0 then
     return false
   end
 
@@ -37,11 +51,11 @@ local function leap(pat, opts_match)
     once = true,
     callback = function()
       for _, t in pairs(require("leap").state.args.targets) do
-        local b = (t.wininfo and t.wininfo[1].bufnr or 0)
+        local b = (t.wininfo and t.wininfo.bufnr or 0)
         bufs[b] = true
-        vim.api.nvim_buf_set_extmark(t.wininfo and t.wininfo[1].bufnr or 0, ns, t.pos[1] - 1, t.pos[2] - 1, {
+        vim.api.nvim_buf_set_extmark(b, ns, t.pos[1] - 1, t.pos[2] - 1, {
           end_col = t.pos[3] - 1,
-          hl_group = o.hl_group,
+          hl_group = _opts_match.hl_group,
         })
         local p = t.pos[2]
         if p > 1 then
@@ -59,21 +73,7 @@ local function leap(pat, opts_match)
   })
 
   -- leap!
-  local ok = pcall(require("leap").leap, {
-    targets = targets,
-    target_windows = { vim.api.nvim_get_current_win() },
-    action = function(t)
-      local r, c = t.pos[1], t.pos[2] + (t.offset or 0)
-      require("leap.jump")["jump-to!"]({ r, c }, {
-        winid = vim.api.nvim_get_current_win(),
-        ["add_to_jumplist?"] = true,
-        mode = "n",
-        offset = 0,
-        ["backward?"] = false,
-        ["inclusive_op?"] = true,
-      })
-    end,
-  })
+  local ok = pcall(require("leap").leap, _opts_leap)
 
   if not ok then
     del() -- ensure deleting autocmd if leap() failed before invoking LeapLeave
