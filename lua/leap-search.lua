@@ -1,8 +1,8 @@
 ---@class Opts_match
 ---@field engine? "vim.regex"
----@field ignorecase boolean?
----@field magic boolean?
----@field smartcase boolean?
+---@field ignorecase? boolean
+---@field magic? boolean
+---@field smartcase? boolean
 ---@field hl_group? string
 local opts_match_default = {
   engine = "vim.regex",
