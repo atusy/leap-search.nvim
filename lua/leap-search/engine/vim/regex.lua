@@ -67,9 +67,8 @@ end
 ---@param pat string
 ---@param win integer
 ---@param opts_match Opts_match?
----@return {pos: {[1]: integer, [2]: integer, [3]: integer}}[]
 local function search(pat, win, opts_match)
-  local ret = {}
+  local ret = {} ---@type {pos: {[1]: integer, [2]: integer, [3]: integer}}[]
   local matches = gmatch_win(vim.regex(flag(pat, opts_match or {})), win)
   for _, m in pairs(matches) do
     for _, col in pairs(m[2]) do
