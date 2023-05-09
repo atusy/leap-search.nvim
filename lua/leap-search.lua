@@ -48,7 +48,6 @@ local function leap(pat, opts)
           t.pos[2] = p - 1
           t.offset = 1
         end
-        -- t.pos[2] = t.pos[2] == 0 and 0 or (t.pos[2] - 1)
       end
       vim.api.nvim_create_autocmd("User", { pattern = "LeapLeave", callback = del })
 
