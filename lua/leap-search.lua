@@ -6,7 +6,7 @@
 ---@field hl_group? string
 local opts_match_default = {
   engine = "vim.regex",
-  hl_group = "Search"
+  hl_group = "Search",
 }
 
 ---@param pat string
@@ -41,7 +41,7 @@ local function leap(pat, opts_match)
         bufs[b] = true
         vim.api.nvim_buf_set_extmark(t.wininfo and t.wininfo[1].bufnr or 0, ns, t.pos[1] - 1, t.pos[2] - 1, {
           end_col = t.pos[3] - 1,
-          hl_group = o.hl_group
+          hl_group = o.hl_group,
         })
         local p = t.pos[2]
         if p > 1 then
@@ -51,7 +51,7 @@ local function leap(pat, opts_match)
       end
       vim.api.nvim_create_autocmd("User", { pattern = "LeapLeave", callback = del })
 
-      local ok, w = pcall(require, 'leap-wide')
+      local ok, w = pcall(require, "leap-wide")
       if ok then
         w.fix_labelling()
       end
@@ -64,7 +64,7 @@ local function leap(pat, opts_match)
     target_windows = { vim.api.nvim_get_current_win() },
     action = function(t)
       local r, c = t.pos[1], t.pos[2] + (t.offset or 0)
-      require('leap.jump')["jump-to!"]({r, c}, {
+      require("leap.jump")["jump-to!"]({ r, c }, {
         winid = vim.api.nvim_get_current_win(),
         ["add_to_jumplist?"] = true,
         mode = "n",
@@ -72,7 +72,7 @@ local function leap(pat, opts_match)
         ["backward?"] = false,
         ["inclusive_op?"] = true,
       })
-    end
+    end,
   })
 
   if not ok then

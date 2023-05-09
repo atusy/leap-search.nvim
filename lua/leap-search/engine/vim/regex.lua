@@ -46,7 +46,6 @@ local function gmatch_win(re, win)
   return ret
 end
 
-
 ---@param pat string
 ---@param opts_match Opts_match
 local function flag(pat, opts_match)
@@ -82,4 +81,4 @@ local function search(pat, win, opts_match)
   return ret
 end
 
-return {search = search}
+return { search = search }
