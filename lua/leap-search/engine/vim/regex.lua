@@ -76,7 +76,7 @@ local function search(pat, win, opts)
   local matches = gmatch_win(vim.regex(flag(pat, opts or {})), win)
   for _, m in pairs(matches) do
     for _, col in pairs(m[2]) do
-      table.insert(ret, { pos = { m[1] + 1, col[1] + 1, col[1] + 1 } })
+      table.insert(ret, { pos = { m[1] + 1, col[1] + 1, col[2] + 1 } })
     end
   end
   return ret
