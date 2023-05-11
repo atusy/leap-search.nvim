@@ -28,11 +28,10 @@ end
 ---@param buffer integer
 ---@param start integer
 ---@param end_ integer
----@param strict_indexing boolean
 ---@return {[1]: integer, [2]: colrange[]}[]
-local function gmatch_lines(re, buffer, start, end_, strict_indexing)
+local function gmatch_lines(re, buffer, start, end_)
   local ret = {}
-  for i, line in pairs(vim.api.nvim_buf_get_lines(buffer, start, end_, strict_indexing)) do
+  for i, line in pairs(vim.api.nvim_buf_get_lines(buffer, start, end_, true)) do
     local matches = gmatch_str(re, line)
     if #matches > 0 then
       table.insert(ret, { start + i - 1, matches })
@@ -47,7 +46,7 @@ end
 local function gmatch_win(re, win)
   local ret = {}
   vim.api.nvim_win_call(win, function()
-    ret = gmatch_lines(re, vim.api.nvim_win_get_buf(win), vim.fn.getpos("w0")[2] - 1, vim.fn.getpos("w$")[2], true)
+    ret = gmatch_lines(re, vim.api.nvim_win_get_buf(win), vim.fn.getpos("w0")[2] - 1, vim.fn.getpos("w$")[2])
   end)
   return ret
 end
