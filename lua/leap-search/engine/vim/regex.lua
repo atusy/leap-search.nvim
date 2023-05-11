@@ -1,3 +1,9 @@
+---@class Opts_vim_regex
+---@field name "vim.regex"
+---@field ignorecase? boolean
+---@field magic? boolean
+---@field smartcase? boolean
+
 ---@alias colrange {[1]: integer, [2]: integer}
 
 ---@param re any
@@ -47,11 +53,11 @@ local function gmatch_win(re, win)
 end
 
 ---@param pat string
----@param opts_match Opts_match
-local function flag(pat, opts_match)
+---@param opts_engine Opts_vim_regex
+local function flag(pat, opts_engine)
   local o = {}
   for _, k in pairs({ "ignorecase", "magic", "smartcase" }) do
-    local v = opts_match[k]
+    local v = opts_engine[k]
     if v == nil then
       o[k] = vim.o[k]
     else
@@ -110,11 +116,11 @@ local function gmatch_backward(re)
 end
 
 ---@param pat string
----@param opts_match Opts_match
+---@param opts_engine Opts_vim_regex
 ---@param opts_leap table
-local function search(pat, opts_match, opts_leap)
+local function search(pat, opts_engine, opts_leap)
   local ret = {} ---@type {pos: {[1]: integer, [2]: integer, [3]: integer}}[]
-  local reg = vim.regex(flag(pat, opts_match))
+  local reg = vim.regex(flag(pat, opts_engine))
 
   -- search forward / backward in the current window
   if not opts_leap.target_windows then
