@@ -38,7 +38,8 @@ Inspired by [fuzzy-motion.vim](https://github.com/yuki-yano/fuzzy-motion.vim)
 ``` lua
 require("leap-search").leap(
   nil,
-  { engines = { { name = "string.find", plain = true, ignorecase = true } } }
+  { engines = { { name = "string.find", plain = true, ignorecase = true } } },
+  { target_windows = { vim.api.nvim_get_current_win() } }
 )
 ```
 
