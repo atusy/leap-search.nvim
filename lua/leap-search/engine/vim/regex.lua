@@ -115,6 +115,8 @@ end
 local function search(pat, opts_match, opts_leap)
   local ret = {} ---@type {pos: {[1]: integer, [2]: integer, [3]: integer}}[]
   local reg = vim.regex(flag(pat, opts_match))
+
+  -- search forward / backward in the current window
   if not opts_leap.target_windows then
     local matches = (opts_leap.backward and gmatch_backward or gmatch_forward)(reg)
     local wininfo = vim.fn.getwininfo(vim.api.nvim_get_current_win())[1]
@@ -128,6 +130,8 @@ local function search(pat, opts_match, opts_leap)
     end
     return ret
   end
+
+  -- search in the target windows
   for _, w in pairs(opts_leap.target_windows) do
     local matches = gmatch_win(reg, w)
     local wininfo = vim.fn.getwininfo(w)[1]
