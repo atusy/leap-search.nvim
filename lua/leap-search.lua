@@ -191,23 +191,21 @@ local function leap_interactive_core(pat, opts_match, opts_leap)
 
   --recurse
   if ok and res and s ~= "" then
-    leap_interactive_core(pat .. s, opts_match, opts_leap)
+    return leap_interactive_core(pat .. s, opts_match, opts_leap)
   end
 
   return ok, res
 end
 
 local function leap_interactive(pat, opts_match, opts_leap)
-  if override then
-    override = false
-    vim.fn.getcharstr = function(...)
-      s = getcharstr(...)
-      return s
-    end
+  local _pat = pat or getcharstr()
+
+  vim.fn.getcharstr = function(...)
+    s = getcharstr(...)
+    return s
   end
 
   --leap interactively
-  local _pat = pat or getcharstr()
   local ok, res = leap_interactive_core(_pat, opts_match, opts_leap)
 
   --finish
