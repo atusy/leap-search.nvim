@@ -171,28 +171,17 @@ local getcharstr = vim.fn.getcharstr
 local s = ""
 
 local function clean()
-  override = false
+  override = true
   vim.fn.getcharstr = getcharstr
   s = ""
 end
 
-local function leap_interactive(pat, opts_match, opts_leap)
-  local _pat = pat or getcharstr()
-
-  if override then
-    override = false
-    vim.fn.getcharstr = function(...)
-      s = getcharstr(...)
-      return s
-    end
-  end
-
+local function leap_interactive_core(pat, opts_match, opts_leap)
   -- leap!
-  local ok, res = pcall(leap_main, _pat, opts_match, vim.tbl_deep_extend("keep", opts_leap or {}, {
+  local ok, res = pcall(leap_main, pat, opts_match, vim.tbl_deep_extend("keep", opts_leap or {}, {
     action = function(t)
       if labels2[t.label] then
         s = ""
-        clean()
         action(t)
         return
       end
@@ -202,8 +191,24 @@ local function leap_interactive(pat, opts_match, opts_leap)
 
   --recurse
   if ok and res and s ~= "" then
-    leap_interactive(_pat .. s, opts_match, opts_leap)
+    leap_interactive_core(pat .. s, opts_match, opts_leap)
   end
+
+  return ok, res
+end
+
+local function leap_interactive(pat, opts_match, opts_leap)
+  if override then
+    override = false
+    vim.fn.getcharstr = function(...)
+      s = getcharstr(...)
+      return s
+    end
+  end
+
+  --leap interactively
+  local _pat = pat or getcharstr()
+  local ok, res = leap_interactive_core(_pat, opts_match, opts_leap)
 
   --finish
   clean()

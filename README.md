@@ -12,8 +12,9 @@ Leap onto a specified search pattern.
 
 ## Usage
 
+### Keymaps to leap within a window if match is found, otherwise go to next or prev 
+
 ``` lua
--- leap within window if match is found, otherwise go to next or prev
 vim.keymap.set("n", "<Space>n", function()
   local pat = vim.fn.getreg("/")
   local leapable = require("leap-search").leap(pat)
@@ -28,6 +29,17 @@ vim.keymap.set("n", "<Space>N", function()
     return vim.fn.search(pat, "b")
   end
 end)
+```
+
+### Interactively find match and jump to it
+
+Inspired by [fuzzy-motion.vim](https://github.com/yuki-yano/fuzzy-motion.vim)
+
+``` lua
+require("leap-search").leap(
+  nil,
+  { engines = { { name = "string.find", plain = true, ignorecase = true } } }
+)
 ```
 
 [leap.nvim]: https://github.com/ggandor/leap.nvim
