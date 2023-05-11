@@ -34,6 +34,7 @@ local function _search(pat, opts_engine, opts_leap)
   return require("leap-search.engine." .. opts_engine.name).search(pat, opts_engine, opts_leap)
 end
 
+---@param pat string
 ---@param opts_match Opts_match
 ---@param opts_leap table
 local function search(pat, opts_match, opts_leap)
@@ -73,7 +74,7 @@ end
 ---@param opts_match Opts_match?
 ---@param opts_leap table?
 ---@return boolean
-local function leap(pat, opts_match, opts_leap)
+local function leap_main(pat, opts_match, opts_leap)
   local _opts_match = vim.tbl_deep_extend("keep", opts_match or {}, opts_match_default)
   local _opts_leap = vim.tbl_deep_extend("keep", opts_leap or {}, { action = action })
   -- search for leap targets
@@ -129,6 +130,95 @@ local function leap(pat, opts_match, opts_leap)
   end
 
   return true
+end
+
+local labels = {
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L",
+  "M",
+  "N",
+  "O",
+  "P",
+  "Q",
+  "R",
+  "S",
+  "T",
+  "U",
+  "V",
+  "W",
+  "X",
+  "Y",
+  "Z",
+}
+
+local labels2 = {}
+for _, v in pairs(labels) do
+  labels2[v] = true
+end
+
+local override = true
+local getcharstr = vim.fn.getcharstr
+local s = ""
+
+local function clean()
+  override = false
+  vim.fn.getcharstr = getcharstr
+  s = ""
+end
+
+local function leap_interactive(pat, opts_match, opts_leap)
+  local _pat = pat or getcharstr()
+
+  if override then
+    override = false
+    vim.fn.getcharstr = function(...)
+      s = getcharstr(...)
+      return s
+    end
+  end
+
+  -- leap!
+  local ok, res = pcall(leap_main, _pat, opts_match, vim.tbl_deep_extend("keep", opts_leap or {}, {
+    action = function(t)
+      if labels2[t.label] then
+        s = ""
+        clean()
+        action(t)
+        return
+      end
+    end,
+    opts = { labels = labels },
+  }))
+
+  --recurse
+  if ok and res and s ~= "" then
+    leap_interactive(_pat .. s, opts_match, opts_leap)
+  end
+
+  --finish
+  clean()
+  if ok then
+    return s == ""
+  end
+  error(res)
+end
+
+---@param pat? string
+---@param opts_match Opts_match?
+---@param opts_leap table?
+---@return boolean
+local function leap(pat, opts_match, opts_leap)
+  return (pat == nil and leap_interactive or leap_main)(pat, opts_match, opts_leap)
 end
 
 return { leap = leap }
