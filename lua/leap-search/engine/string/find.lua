@@ -101,7 +101,6 @@ end
 ---@param opts_engine Opts_string_find
 ---@param opts_leap table
 local function search(pat, opts_engine, opts_leap)
-  vim.print(pat, opts_engine)
   local ret = {} ---@type {pos: {[1]: integer, [2]: integer, [3]: integer}}[]
 
   -- search forward / backward in the current window
