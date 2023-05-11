@@ -29,7 +29,6 @@ local function gmatch_lines(pat, buffer, start, end_, plain)
   local ret = {}
   for i, line in pairs(vim.api.nvim_buf_get_lines(buffer, start, end_, true)) do
     local matches = gmatch_str(pat, line, plain)
-    vim.print(line, matches)
     if #matches > 0 then
       table.insert(ret, { start + i - 1, matches })
     end
