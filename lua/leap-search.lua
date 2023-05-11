@@ -180,14 +180,16 @@ local function leap_interactive_core(pat, opts_match, opts_leap)
 
   --recurse
   if ok and res and s ~= "" then
+    vim.api.nvim_echo({ { pat } }, false, {})
     return leap_interactive_core(pat .. s, opts_match, opts_leap)
   end
 
   return ok, res
 end
 
-local function leap_interactive(pat, opts_match, opts_leap)
-  local _pat = pat or getcharstr()
+local function leap_interactive(_, opts_match, opts_leap)
+  local _pat = getcharstr()
+  vim.api.nvim_echo({ { _pat } }, false, {})
   local _opts_leap = vim.tbl_deep_extend("keep", opts_leap or {}, {
     action = function(t)
       if t.label == nil or labels2[t.label] then
