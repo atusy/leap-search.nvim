@@ -178,8 +178,7 @@ local function leap_interactive_core(pat, opts_match, opts_leap)
   -- leap!
   local ok, res = pcall(leap_main, pat, opts_match, vim.tbl_deep_extend("keep", opts_leap or {}, {
     action = function(t)
-      if labels2[t.label] then
-        s = ""
+      if t.label == nil or labels2[t.label] then
         action(t)
         return
       end
