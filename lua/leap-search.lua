@@ -166,12 +166,10 @@ for _, v in pairs(labels) do
   labels2[v] = true
 end
 
-local override = true
 local getcharstr = vim.fn.getcharstr
 local s = ""
 
 local function clean()
-  override = true
   vim.fn.getcharstr = getcharstr
   s = ""
 end
