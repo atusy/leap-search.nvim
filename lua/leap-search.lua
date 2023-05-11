@@ -176,15 +176,7 @@ end
 
 local function leap_interactive_core(pat, opts_match, opts_leap)
   -- leap!
-  local ok, res = pcall(leap_main, pat, opts_match, vim.tbl_deep_extend("keep", opts_leap or {}, {
-    action = function(t)
-      if t.label == nil or labels2[t.label] then
-        action(t)
-        return
-      end
-    end,
-    opts = { labels = labels },
-  }))
+  local ok, res = pcall(leap_main, pat, opts_match, opts_leap)
 
   --recurse
   if ok and res and s ~= "" then
@@ -196,6 +188,15 @@ end
 
 local function leap_interactive(pat, opts_match, opts_leap)
   local _pat = pat or getcharstr()
+  local _opts_leap = vim.tbl_deep_extend("keep", opts_leap or {}, {
+    action = function(t)
+      if t.label == nil or labels2[t.label] then
+        action(t)
+        return
+      end
+    end,
+    opts = { labels = labels },
+  })
 
   vim.fn.getcharstr = function(...)
     s = getcharstr(...)
@@ -203,7 +204,7 @@ local function leap_interactive(pat, opts_match, opts_leap)
   end
 
   --leap interactively
-  local ok, res = leap_interactive_core(_pat, opts_match, opts_leap)
+  local ok, res = leap_interactive_core(_pat, opts_match, _opts_leap)
 
   --finish
   clean()
