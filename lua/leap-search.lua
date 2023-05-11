@@ -1,4 +1,8 @@
----@alias Opts_engine Opts_vim_regex
+---@class Opts_user_engine
+---@field name string
+---@field fn fun(string, table, table): {pos: {[1]: integer, [2]: integer, [3]: integer}}[]
+
+---@alias Opts_engine Opts_vim_regex | Opts_user_engine
 
 ---@class Opts_match
 ---@field engines Opts_engine[]
@@ -24,6 +28,9 @@ end
 ---@param opts_leap table
 ---@return {pos: {[1]: integer, [2]: integer, [3]: integer}}[]
 local function _search(pat, opts_engine, opts_leap)
+  if opts_engine.fn then
+    return opts_engine.fn(pat, opts_engine, opts_leap)
+  end
   return require("leap-search.engine." .. opts_engine.name).search(pat, opts_engine, opts_leap)
 end
 
