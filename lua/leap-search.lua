@@ -73,10 +73,11 @@ local function leap(pat, opts_match, opts_leap)
   })
 
   -- leap!
-  local ok = pcall(require("leap").leap, _opts_leap)
+  local ok, err = pcall(require("leap").leap, _opts_leap)
 
   if not ok then
     del() -- ensure deleting autocmd if leap() failed before invoking LeapLeave
+    error(err)
   end
 
   return true
