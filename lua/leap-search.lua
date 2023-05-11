@@ -74,7 +74,7 @@ end
 ---@param opts_leap table?
 ---@return boolean
 local function leap(pat, opts_match, opts_leap)
-  local _opts_match = vim.tbl_deep_extend("force", opts_match or {}, opts_match_default)
+  local _opts_match = vim.tbl_deep_extend("keep", opts_match or {}, opts_match_default)
   local _opts_leap = vim.tbl_deep_extend("keep", opts_leap or {}, { action = action })
   -- search for leap targets
   _opts_leap.targets = search(pat, _opts_match, _opts_leap)
