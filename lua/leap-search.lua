@@ -2,7 +2,7 @@
 ---@field name string
 ---@field fn fun(string, table, table): {pos: {[1]: integer, [2]: integer, [3]: integer}}[]
 
----@alias Opts_engine Opts_vim_regex | Opts_string_find | Opts_kensaku_query| Opts_user_engine
+---@alias Opts_engine Opts_vim_regex | Opts_string_find | Opts_kensaku_query | Opts_user_engine
 
 ---@class Opts_match
 ---@field engines Opts_engine[]

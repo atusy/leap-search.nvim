@@ -14,13 +14,13 @@ local function gmatch_str(pat, str, opts)
   if opts.ignorecase then
     str = string.lower(str)
   end
-  for _ = 1,#str do
+  for _ = 1, #str do
     local left, right = string.find(str, pat, init, opts.plain)
     if left == nil then
       return ret
     end
     init = left + 1
-    local colrange = {left - 1, right and right or left}
+    local colrange = { left - 1, right and right or left }
     table.insert(ret, colrange)
   end
   return ret
