@@ -74,8 +74,8 @@ end
 local function gmatch_forward(re)
   local curpos = vim.fn.getcurpos()
   local currow, curcol = curpos[2] - 1, curpos[3] - 1
-  local match_curline = gmatch_lines(re, 0, currow, currow + 1, true)
-  local match_nextlines = gmatch_lines(re, 0, currow + 1, vim.fn.getpos("w$")[2], true)
+  local match_curline = gmatch_lines(re, 0, currow, currow + 1)
+  local match_nextlines = gmatch_lines(re, 0, currow + 1, vim.fn.getpos("w$")[2])
   local ret = {}
   for _, m in pairs(match_curline) do
     local filtered = {} ---@type colrange[]
@@ -96,8 +96,8 @@ end
 local function gmatch_backward(re)
   local curpos = vim.fn.getcurpos()
   local currow, curcol = curpos[2] - 1, curpos[3] - 1
-  local match_curline = gmatch_lines(re, 0, currow, currow + 1, true)
-  local match_prevlines = gmatch_lines(re, 0, vim.fn.getpos("w0")[2] - 1, currow, true)
+  local match_curline = gmatch_lines(re, 0, currow, currow + 1)
+  local match_prevlines = gmatch_lines(re, 0, vim.fn.getpos("w0")[2] - 1, currow)
   local ret = {}
   for _, m in pairs(match_curline) do
     local filtered = {} ---@type colrange[]
