@@ -12,18 +12,6 @@ local opts_match_default = {
   hl_group = "Search",
 }
 
-local function action(t)
-  local r, c = t.pos[1], t.pos[2] + (t.offset or 0)
-  require("leap.jump")["jump-to!"]({ r, c }, {
-    winid = vim.api.nvim_get_current_win(),
-    ["add_to_jumplist?"] = true,
-    mode = "n",
-    offset = 0,
-    ["backward?"] = false,
-    ["inclusive_op?"] = true,
-  })
-end
-
 ---@param opts_engine Opts_engine
 ---@param opts_leap table
 ---@return {pos: {[1]: integer, [2]: integer, [3]: integer}}[]
@@ -76,7 +64,7 @@ end
 ---@return boolean
 local function leap_main(pat, opts_match, opts_leap)
   local _opts_match = vim.tbl_deep_extend("keep", opts_match or {}, opts_match_default)
-  local _opts_leap = vim.tbl_deep_extend("keep", opts_leap or {}, { action = action })
+  local _opts_leap = vim.tbl_deep_extend("keep", opts_leap or {}, { action = require("leap-search.action").jump })
   -- search for leap targets
   _opts_leap.targets = search(pat, _opts_match, _opts_leap)
   if #_opts_leap.targets == 0 then
@@ -193,7 +181,7 @@ local function leap_interactive(_, opts_match, opts_leap)
   local _opts_leap = vim.tbl_deep_extend("keep", opts_leap or {}, {
     action = function(t)
       if t.label == nil or labels2[t.label] then
-        action(t)
+        require("leap-search.action").jump(t)
         return
       end
     end,
