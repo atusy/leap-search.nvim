@@ -6,7 +6,7 @@ function M.jump(t)
     winid = vim.api.nvim_get_current_win(),
     ["add_to_jumplist?"] = true,
     mode = "n",
-    offset = 0,
+    offset = require("leap").state.args.offset or 0,
     ["backward?"] = false,
     ["inclusive_op?"] = true,
   })

@@ -6,8 +6,9 @@
 
 ---@class Opts_match
 ---@field engines Opts_engine[]
----@field hl_group? string
----@field interactive? boolean
+---@field hl_group? string defaults to Search
+---@field interactive? boolean defaults to false
+---@field prefix_label? boolean defaults to true so to avoid hiding matches with labels
 local opts_match_default = {
   engines = { { name = "vim.regex" } },
   hl_group = "Search",
@@ -42,17 +43,19 @@ local function leap_main(pat, opts_match, opts_leap)
     pattern = "LeapEnter",
     once = true,
     callback = function()
-      for _, t in pairs(require("leap").state.args.targets) do
-        local b = (t.wininfo and t.wininfo.bufnr or 0)
-        bufs[b] = true
-        vim.api.nvim_buf_set_extmark(b, ns, t.pos[1] - 1, t.pos[2] - 1, {
-          end_col = t.pos[3] - 1,
-          hl_group = _opts_match.hl_group,
-        })
-        local p = t.pos[2]
-        if p > 1 then
-          t.pos[2] = p - 1
-          t.offset = 1
+      if _opts_match.prefix_label ~= false then
+        for _, t in pairs(require("leap").state.args.targets) do
+          local b = (t.wininfo and t.wininfo.bufnr or 0)
+          bufs[b] = true
+          vim.api.nvim_buf_set_extmark(b, ns, t.pos[1] - 1, t.pos[2] - 1, {
+            end_col = t.pos[3] - 1,
+            hl_group = _opts_match.hl_group,
+          })
+          local p = t.pos[2]
+          if p > 1 then
+            t.pos[2] = p - 1
+            t.offset = 1
+          end
         end
       end
       vim.api.nvim_create_autocmd("User", { pattern = "LeapLeave", callback = del })
