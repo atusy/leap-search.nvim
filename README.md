@@ -38,7 +38,12 @@ Inspired by [fuzzy-motion.vim](https://github.com/yuki-yano/fuzzy-motion.vim)
 ``` lua
 require("leap-search").leap(
   nil,
-  { engines = { { name = "string.find", plain = true, ignorecase = true } } },
+  {
+    engines = {
+      { name = "string.find", plain = true, ignorecase = true },
+      -- { name = "kensaku.query" }, -- to search Japanese string with romaji with https://github.com/lambdalisue/kensaku.vim
+    },
+  },
   { target_windows = { vim.api.nvim_get_current_win() } }
 )
 ```
