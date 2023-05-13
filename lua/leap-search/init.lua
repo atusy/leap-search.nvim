@@ -14,7 +14,7 @@ local opts_match_default = {
   hl_group = "Search",
 }
 
----@param pat string
+---@param pat string | fun(): string
 ---@param opts_match Opts_match?
 ---@param opts_leap table?
 ---@return boolean
@@ -34,7 +34,8 @@ local function leap_main(pat, opts_match, opts_leap)
   -- search for leap targets
   local targets
   _opts_leap.targets = function()
-    targets = require("leap-search.engine").search(pat, _opts_match, _opts_leap)
+    local s = type(pat) == "string" and pat or pat()
+    targets = require("leap-search.engine").search(s, _opts_match, _opts_leap)
     require("leap").state.args.targets = targets
     if _opts_match.prefix_label ~= false then
       for _, t in pairs(require("leap").state.args.targets) do
