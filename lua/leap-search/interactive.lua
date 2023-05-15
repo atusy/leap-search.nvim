@@ -40,24 +40,24 @@ local function clean()
   s = ""
 end
 
-local function leap_interactive_core(fn, pat, opts_match, opts_leap)
+local function leap_interactive_core(leap, pat, opts_match, opts_leap)
   -- leap!
   local function get()
     pat = getcharstr()
     vim.api.nvim_echo({ { pat } }, false, {})
     return pat
   end
-  local ok, res = pcall(fn, pat or get, opts_match, opts_leap)
+  local ok, res = pcall(leap, pat or get, opts_match, opts_leap)
 
   --recurse
   if ok and res and s ~= "" then
-    return leap_interactive_core(fn, pat .. s, opts_match, opts_leap)
+    return leap_interactive_core(leap, pat .. s, opts_match, opts_leap)
   end
 
   return ok, res
 end
 
-local function leap_interactive(fn)
+local function leap_interactive(leap)
   -- use injection to avoid looped dependencies
   return function(_, opts_match, opts_leap)
     local _opts_leap = vim.tbl_deep_extend("keep", opts_leap or {}, {
@@ -76,7 +76,7 @@ local function leap_interactive(fn)
     end
 
     --leap interactively
-    local ok, res = leap_interactive_core(fn, nil, opts_match, _opts_leap)
+    local ok, res = leap_interactive_core(leap, nil, opts_match, _opts_leap)
 
     --finish
     clean()
