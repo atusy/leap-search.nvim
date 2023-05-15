@@ -63,10 +63,10 @@ local function flag(pat, opts_engine)
       o[k] = v
     end
   end
-  if o.ic and o.sc and string.match(pat, "[A-Z]") then
-    o.ic = false
+  if o.ignorecase and o.smartcase and string.match(pat, "[A-Z]") then
+    o.ignorecase = false
   end
-  local prefix = "" .. (o.ma and "\\m" or "\\M") .. (o.ic and "\\c" or "\\C")
+  local prefix = "" .. (o.magic and "\\m" or "\\M") .. (o.ignorecase and "\\c" or "\\C")
   return prefix .. pat
 end
 
