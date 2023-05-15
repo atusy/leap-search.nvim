@@ -42,12 +42,14 @@ end
 
 local function leap_interactive_core(leap, pat, opts_match, opts_leap)
   -- leap!
-  local function get()
-    pat = getcharstr()
+  local function getpat()
+    if pat == nil then
+      pat = getcharstr()
+    end
     vim.api.nvim_echo({ { pat } }, false, {})
     return pat
   end
-  local ok, res = pcall(leap, pat or get, opts_match, opts_leap)
+  local ok, res = pcall(leap, getpat, opts_match, opts_leap)
 
   --recurse
   if ok and res and s ~= "" then
