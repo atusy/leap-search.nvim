@@ -22,11 +22,19 @@ local function search(pat, opts_match, opts_leap)
 
   -- if multiple engines, return merged matches
   local data = {} ---@type target[]
+  local dup = {} ---@type table<integer, table<integer, true>>
   for _, engine in pairs(opts_match.engines) do
     local ok, matches = pcall(_search, pat, engine, opts_leap)
     if ok then
       for _, m in pairs(matches) do
-        table.insert(data, m)
+        local row, col = m.pos[1], m.pos[2]
+        if not dup[row] then
+          dup[row] = {}
+        end
+        if not dup[row][col] then
+          table.insert(data, m)
+          dup[row][col] = true
+        end
       end
     end
   end
