@@ -1,6 +1,18 @@
 ---@class Opts_kensaku_query: Opts_vim_regex
 ---@field name string "kensaku.query"
 
+local function _kensaku_query(pat)
+  local res = vim.fn["kensaku#query"](pat)
+  if pat == "i" then
+    ---NOTE: this res has unmatched ), so add a simple work around to ensure it works
+    local ok = pcall(vim.regex, res)
+    if not ok then
+      return "\\m" .. res:match("%[.-%]")
+    end
+  end
+  return res
+end
+
 ---A wrapper of kensaku#query
 ---
 ---kensaku#query considers spaces as split character.
@@ -19,10 +31,10 @@ local function kensaku_query(pat)
   for _ = 1, #str do
     local left, right = string.find(str, " +", 0, false)
     if left == nil then
-      return query .. vim.fn["kensaku#query"](str)
+      return query .. _kensaku_query(str)
     end
     if left > 1 then
-      query = query .. vim.fn["kensaku#query"](string.sub(str, 1, left - 1))
+      query = query .. _kensaku_query(string.sub(str, 1, left - 1))
     end
     query = query .. string.sub(str, left, right)
     str = string.sub(str, right + 1)
