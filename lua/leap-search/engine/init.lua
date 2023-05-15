@@ -20,7 +20,7 @@ local function search(pat, opts_match, opts_leap)
     return _search(pat, opts_match.engines[1], opts_leap)
   end
 
-  -- if multiple engines, return merged matches
+  -- if multiple engines, merge matches
   local data = {} ---@type target[]
   local dup = {} ---@type table<integer, table<integer, true>>
   for _, engine in pairs(opts_match.engines) do
@@ -39,10 +39,12 @@ local function search(pat, opts_match, opts_leap)
     end
   end
 
+  -- sort matches so to sort labels
   table.sort(data, function(a, b)
     return (a.pos[1] == b.pos[1] and a.pos[2] < b.pos[2]) or (a.pos[1] < b.pos[1])
   end)
 
+  -- return merged and sorted matches
   return data
 end
 
