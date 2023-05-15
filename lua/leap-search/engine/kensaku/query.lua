@@ -18,7 +18,6 @@ local function kensaku_query(pat)
   local query = ""
   for _ = 1, #str do
     local left, right = string.find(str, " +", 0, false)
-    vim.print({pat, left, right})
     if left == nil then
       return query .. vim.fn["kensaku#query"](str)
     end
