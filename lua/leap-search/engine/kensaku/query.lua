@@ -22,7 +22,7 @@ local function kensaku_query(pat)
       return query .. vim.fn["kensaku#query"](str)
     end
     if left > 1 then
-      query = query .. string.sub(str, 1, left - 1)
+      query = query .. vim.fn["kensaku#query"](string.sub(str, 1, left - 1))
     end
     query = query .. string.sub(str, left, right)
     str = string.sub(str, right + 1)
