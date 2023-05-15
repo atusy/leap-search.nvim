@@ -5,6 +5,13 @@
 ---@param opts_engine Opts_kensaku_query
 ---@param opts_leap table
 local function search(pat, opts_engine, opts_leap)
+  if pat == " " then
+    ---NOTE: special care avoids infinite waiting from somewhere...
+    return require("leap-search.engine.string.find").search(" ", {
+      name = "string.find",
+      plain = true
+    }, opts_leap)
+  end
   local query = vim.fn["kensaku#query"](pat)
   local ok, res = pcall(require("leap-search.engine.vim.regex").search, query, opts_engine, opts_leap)
   if ok then
