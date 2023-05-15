@@ -63,6 +63,7 @@ local function leap_interactive(leap)
     local _opts_leap = vim.tbl_deep_extend("keep", opts_leap or {}, {
       action = function(t)
         if t.label == nil or labels2[t.label] then
+          s = ""
           require("leap-search.action").jump(t)
           return
         end
