@@ -40,9 +40,25 @@ local function clean()
   s = ""
 end
 
+local backspace = vim.api.nvim_replace_termcodes("<BS>", true, false, true)
+
 local function getcharstr2(...)
   s = getcharstr(...)
   return s
+end
+
+local function generate_pattern(pat, opts_match)
+  if opts_match.experimental and opts_match.experimental.backspace and s == backspace then
+    if pat == "" then
+      return ""
+    end
+    local i = vim.regex(".$"):match_str(pat)
+    if i == 0 then
+      return ""
+    end
+    return string.sub(pat, 1, i)
+  end
+  return pat .. s
 end
 
 local function leap_interactive_core(leap, pat, opts_match, opts_leap)
@@ -58,7 +74,7 @@ local function leap_interactive_core(leap, pat, opts_match, opts_leap)
 
   --recurse
   if ok and res and s ~= "" then
-    return leap_interactive_core(leap, pat .. s, opts_match, opts_leap)
+    return leap_interactive_core(leap, generate_pattern(pat, opts_match), opts_match, opts_leap)
   end
 
   return ok, res
