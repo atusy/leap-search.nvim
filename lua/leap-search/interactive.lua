@@ -49,8 +49,7 @@ end
 
 local function generate_pattern(pat, opts_match)
   if opts_match.experimental and opts_match.experimental.backspace and user_input == backspace then
-    local i = vim.regex(".$"):match_str(pat)
-    return string.sub(pat, 1, i)
+    return string.sub(pat, 1, vim.regex(".$"):match_str(pat))
   end
   return pat .. user_input
 end
