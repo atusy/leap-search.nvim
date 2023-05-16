@@ -33,22 +33,22 @@ for _, v in pairs(labels) do
 end
 
 local getcharstr = vim.fn.getcharstr
-local s = ""
+local user_input = ""
 
 local function clean()
   vim.fn.getcharstr = getcharstr
-  s = ""
+  user_input = ""
 end
 
 local backspace = vim.api.nvim_replace_termcodes("<BS>", true, false, true)
 
 local function getcharstr2(...)
-  s = getcharstr(...)
-  return s
+  user_input = getcharstr(...)
+  return user_input
 end
 
 local function generate_pattern(pat, opts_match)
-  if opts_match.experimental and opts_match.experimental.backspace and s == backspace then
+  if opts_match.experimental and opts_match.experimental.backspace and user_input == backspace then
     if pat == "" then
       return ""
     end
@@ -58,7 +58,7 @@ local function generate_pattern(pat, opts_match)
     end
     return string.sub(pat, 1, i)
   end
-  return pat .. s
+  return pat .. user_input
 end
 
 local function leap_interactive_core(leap, pat, opts_match, opts_leap)
@@ -73,7 +73,7 @@ local function leap_interactive_core(leap, pat, opts_match, opts_leap)
   local ok, res = pcall(leap, getpat, opts_match, opts_leap)
 
   --recurse
-  if ok and res and s ~= "" then
+  if ok and res and user_input ~= "" then
     return leap_interactive_core(leap, generate_pattern(pat, opts_match), opts_match, opts_leap)
   end
 
@@ -86,7 +86,7 @@ local function leap_interactive(leap)
     local _opts_leap = vim.tbl_deep_extend("keep", opts_leap or {}, {
       action = function(t)
         if t.label == nil or labels2[t.label] then
-          s = ""
+          user_input = ""
           require("leap-search.action").jump(t)
           return
         end
@@ -102,7 +102,7 @@ local function leap_interactive(leap)
     --finish
     clean()
     if ok then
-      return s == ""
+      return user_input == ""
     end
     error(res)
   end
