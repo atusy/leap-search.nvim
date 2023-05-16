@@ -121,6 +121,10 @@ end
 ---@param opts_engine Opts_string_find
 ---@param opts_leap table
 local function search(pat, opts_engine, opts_leap)
+  if pat == "" then
+    return {}
+  end
+
   local ret = {} ---@type {pos: {[1]: integer, [2]: integer, [3]: integer}}[]
   opts_engine = fix_opts(opts_engine, pat)
 

@@ -118,6 +118,10 @@ end
 ---@param opts_engine Opts_vim_regex
 ---@param opts_leap table
 local function search(pat, opts_engine, opts_leap)
+  if pat == "" then
+    return {}
+  end
+
   local ret = {} ---@type {pos: {[1]: integer, [2]: integer, [3]: integer}}[]
   local reg = vim.regex(flag(pat, opts_engine))
 
