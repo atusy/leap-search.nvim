@@ -40,6 +40,11 @@ local function clean()
   s = ""
 end
 
+local function getcharstr2(...)
+  s = getcharstr(...)
+  return s
+end
+
 local function leap_interactive_core(leap, pat, opts_match, opts_leap)
   -- leap!
   local function getpat()
@@ -73,10 +78,7 @@ local function leap_interactive(leap)
       opts = { labels = labels },
     })
 
-    vim.fn.getcharstr = function(...)
-      s = getcharstr(...)
-      return s
-    end
+    vim.fn.getcharstr = getcharstr2
 
     --leap interactively
     local ok, res = leap_interactive_core(leap, nil, opts_match, _opts_leap)
