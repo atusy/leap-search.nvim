@@ -4,14 +4,26 @@
 
 ---@alias Opts_engine Opts_vim_regex | Opts_string_find | Opts_kensaku_query | Opts_user_engine
 
+local function priority()
+  local ok, res = pcall(function()
+    return require("leap.highlight").priority.label
+  end)
+  if ok then
+    return res
+  end
+  return nil
+end
+
 ---@class Opts_match
 ---@field engines Opts_engine[]
----@field hl_group? string defaults to Search
+---@field hl_group? string highlight group for matches (defaults to Search)
+---@field priority? string highlight priority for hl_group (default to leap.highlight.priority.label)
 ---@field interactive? boolean defaults to false
 ---@field prefix_label? boolean defaults to true so to avoid hiding matches with labels
 local opts_match_default = {
   engines = { { name = "vim.regex" } },
   hl_group = "Search",
+  priority = priority(),
 }
 
 ---@param pat string | fun(): string
@@ -44,6 +56,7 @@ local function leap_main(pat, opts_match, opts_leap)
         vim.api.nvim_buf_set_extmark(b, ns, t.pos[1] - 1, t.pos[2] - 1, {
           end_col = t.pos[3] - 1,
           hl_group = _opts_match.hl_group,
+          priority = _opts_match.priority,
         })
         local p = t.pos[2]
         if p > 1 then
