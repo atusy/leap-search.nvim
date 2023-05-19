@@ -12,7 +12,15 @@ Leap onto a specified search pattern.
 
 ## Usage
 
-### Keymaps to leap within a window if match is found, otherwise go to next or prev 
+### Leap with last search pattern
+
+``` lua
+require("leap-search").leap(vim.fn.getreg("/"))
+```
+
+![](https://user-images.githubusercontent.com/30277794/239579105-f53a4eca-a060-4a93-adc7-bd361ea692d1.gif)
+
+#### Keymaps to go to next or previous matches
 
 ``` lua
 vim.keymap.set("n", "<Space>n", function()
@@ -47,5 +55,7 @@ require("leap-search").leap(
   { target_windows = { vim.api.nvim_get_current_win() } }
 )
 ```
+
+![](https://user-images.githubusercontent.com/30277794/239579838-f8c57d99-04e6-4e47-a3ad-4231322cd782.gif)
 
 [leap.nvim]: https://github.com/ggandor/leap.nvim
