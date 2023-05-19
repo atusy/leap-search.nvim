@@ -20,6 +20,7 @@ end
 ---@field priority? string highlight priority for hl_group (default to leap.highlight.priority.label)
 ---@field interactive? boolean defaults to false
 ---@field prefix_label? boolean defaults to true so to avoid hiding matches with labels
+---@field experimental? table<string, any>
 local opts_match_default = {
   engines = { { name = "vim.regex" } },
   hl_group = "Search",
@@ -48,6 +49,11 @@ local function leap_main(pat, opts_match, opts_leap)
   _opts_leap.targets = function()
     local s = type(pat) == "string" and pat or pat()
     targets = require("leap-search.engine").search(s, _opts_match, _opts_leap)
+    if #targets == 1 and _opts_match.experimental and _opts_match.experimental.autojump == false then
+      table.insert(targets, targets[1])
+      local labels = require("leap").state.args.opts.labels
+      require("leap").state.args.opts.labels = { labels[1], labels[1] }
+    end
     require("leap").state.args.targets = targets
     if _opts_match.prefix_label ~= false then
       for _, t in pairs(require("leap").state.args.targets) do
