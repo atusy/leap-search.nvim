@@ -23,14 +23,14 @@ require("leap-search").leap(vim.fn.getreg("/"))
 #### Keymaps to go to next or previous matches
 
 ``` lua
-vim.keymap.set("n", "<Space>n", function()
+vim.keymap.set("n", "<Leader>n", function()
   local pat = vim.fn.getreg("/")
   local leapable = require("leap-search").leap(pat)
   if not leapable then
     vim.cnd("normal! n")
   end
 end)
-vim.keymap.set("n", "<Space>N", function()
+vim.keymap.set("n", "<Leader>N", function()
   local pat = vim.fn.getreg("/")
   local leapable = require("leap-search").leap(pat, {}, { backward = true })
   if not leapable then
