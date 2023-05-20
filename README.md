@@ -27,14 +27,14 @@ vim.keymap.set("n", "<Space>n", function()
   local pat = vim.fn.getreg("/")
   local leapable = require("leap-search").leap(pat)
   if not leapable then
-    return vim.fn.search(pat)
+    vim.cnd("normal! n")
   end
 end)
 vim.keymap.set("n", "<Space>N", function()
   local pat = vim.fn.getreg("/")
   local leapable = require("leap-search").leap(pat, {}, { backward = true })
   if not leapable then
-    return vim.fn.search(pat, "b")
+    vim.cnd("normal! N")
   end
 end)
 ```
