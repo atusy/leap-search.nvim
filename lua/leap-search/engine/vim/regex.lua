@@ -117,12 +117,14 @@ end
 ---@param pat string
 ---@param opts_engine Opts_vim_regex
 ---@param opts_leap table
+---@return target[]
 local function search(pat, opts_engine, opts_leap)
+  local ret = {} ---@type target[]
+
   if pat == "" then
-    return {}
+    return ret
   end
 
-  local ret = {} ---@type {pos: {[1]: integer, [2]: integer, [3]: integer}}[]
   local reg = vim.regex(flag(pat, opts_engine))
 
   -- search forward / backward in the current window
@@ -132,7 +134,7 @@ local function search(pat, opts_engine, opts_leap)
     for _, m in pairs(matches) do
       for _, col in pairs(m[2]) do
         table.insert(ret, {
-          pos = { m[1] + 1, col[1] + 1, col[2] + 1 },
+          pos = { m[1] + 1, col[1] + 1, m[1] + 1, col[2] + 1 },
           wininfo = wininfo,
         })
       end
@@ -147,7 +149,7 @@ local function search(pat, opts_engine, opts_leap)
     for _, m in pairs(matches) do
       for _, col in pairs(m[2]) do
         table.insert(ret, {
-          pos = { m[1] + 1, col[1] + 1, col[2] + 1 },
+          pos = { m[1] + 1, col[1] + 1, m[1] + 1, col[2] + 1 },
           wininfo = wininfo,
         })
       end

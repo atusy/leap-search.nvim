@@ -1,4 +1,5 @@
----@alias target {pos: {[1]: integer, [2]: integer, [3]: integer}, wininfo?: {bufnr: integer}}
+---@alias pos {[1]: integer, [2]: integer, [3]: integer, [4]: integer}
+---@alias target {pos: pos, wininfo?: {bufnr: integer}}
 
 ---@param opts_engine Opts_engine
 ---@param opts_leap table

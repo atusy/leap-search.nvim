@@ -60,7 +60,8 @@ local function leap_main(pat, opts_match, opts_leap)
         local b = (t.wininfo and t.wininfo.bufnr or 0)
         bufs[b] = true
         vim.api.nvim_buf_set_extmark(b, ns, t.pos[1] - 1, t.pos[2] - 1, {
-          end_col = t.pos[3] - 1,
+          end_row = t.pos[3] - 1,
+          end_col = t.pos[4] - 1,
           hl_group = _opts_match.hl_group,
           priority = _opts_match.priority,
         })
