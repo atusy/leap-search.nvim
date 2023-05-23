@@ -7,12 +7,16 @@
 ---in order to include space as a search keyword, this function splits the input pattern by spaces,
 ---query with non space strings, and then concat them with spaces.
 --[[
-echo kensaku#query("%"):
-\m\%([%‰％]\|パーセント\)
+```vim
+:echo kensaku#query("%")
+" \m\%([%‰％]\|パーセント\)
 
-echo kensaku#query("% %"):
-\m\%([%‰％]\|パーセント\)\%([%‰％]\|パーセント\)
+:echo kensaku#query("% %")
+" \m\%([%‰％]\|パーセント\)\%([%‰％]\|パーセント\)
+```
 ]]
+---@param pat string
+---@return string
 local function kensaku_query(pat)
   local str = pat
   local query = ""
