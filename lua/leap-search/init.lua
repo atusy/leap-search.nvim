@@ -21,6 +21,7 @@ end
 ---@field interactive? boolean defaults to false
 ---@field prefix_label? boolean defaults to true so to avoid hiding matches with labels
 ---@field experimental? table<string, any>
+---@field on_targets? fun(): nil
 local opts_match_default = {
   engines = { { name = "vim.regex" } },
   hl_group = "Search",
@@ -80,7 +81,10 @@ local function leap_main(pat, opts_match, opts_leap)
       w.fix_labelling()
     end
 
-    return targets
+    if _opts_match.on_targets then
+      _opts_match.on_targets()
+    end
+    return require("leap").state.args.targets
   end
 
   -- leap!
