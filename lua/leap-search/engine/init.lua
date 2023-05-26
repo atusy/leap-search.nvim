@@ -11,6 +11,14 @@ local function _search(pat, opts_engine, opts_leap)
   return require("leap-search.engine." .. opts_engine.name).search(pat, opts_engine, opts_leap)
 end
 
+local function reverse(x)
+  local rev = {}
+  for i = #x, 1, -1 do
+    table.insert(rev, x[i])
+  end
+  return rev
+end
+
 ---@param pat string
 ---@param opts_match Opts_match
 ---@param opts_leap table
@@ -18,7 +26,8 @@ end
 local function search(pat, opts_match, opts_leap)
   -- if a single engine simply return matches
   if #opts_match.engines == 1 then
-    return _search(pat, opts_match.engines[1], opts_leap)
+    local data = _search(pat, opts_match.engines[1], opts_leap)
+    return opts_leap.backward and reverse(data) or data
   end
 
   -- if multiple engines, merge matches
@@ -46,7 +55,7 @@ local function search(pat, opts_match, opts_leap)
   end)
 
   -- return merged and sorted matches
-  return data
+  return opts_leap.backward and reverse(data) or data
 end
 
 return { search = search }
