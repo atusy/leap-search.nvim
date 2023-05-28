@@ -42,7 +42,8 @@ local function search(pat, opts_engine, opts_leap)
     ---NOTE: special care avoids infinite waiting from somewhere...
     return require("leap-search.engine.string.find").search(" ", {
       name = "string.find",
-      plain = true
+      plain = true,
+      nlines = opts_engine.nlines,
     }, opts_leap)
   end
   local query = kensaku_query(pat)

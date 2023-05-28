@@ -3,6 +3,7 @@
 ---@field plain? boolean
 ---@field ignorecase? boolean
 ---@field smartcase? boolean
+---@field nlines? integer
 
 ---@param str string
 ---@param pat string
@@ -61,7 +62,6 @@ local function gmatch_forward(pat, opts)
   local curpos = vim.fn.getcurpos()
   local currow, curcol = curpos[2] - 1, curpos[3] - 1
   local match_curline = gmatch_lines(pat, 0, currow, currow + 1, opts)
-  local match_nextlines = gmatch_lines(pat, 0, currow + 1, vim.fn.getpos("w$")[2], opts)
   local ret = {}
   for _, m in pairs(match_curline) do
     local filtered = {} ---@type colrange[]
@@ -72,6 +72,12 @@ local function gmatch_forward(pat, opts)
     end
     table.insert(ret, { currow, filtered })
   end
+  if opts.nlines == 1 then
+    return ret
+  end
+  local n_max = vim.fn.getpos("w$")[2]
+  local n = (opts.nlines == nil or opts.nlines < 1) and n_max or math.min(currow + opts.nlines, n_max)
+  local match_nextlines = gmatch_lines(pat, 0, currow + 1, n, opts)
   for _, m in pairs(match_nextlines) do
     table.insert(ret, m)
   end
@@ -85,7 +91,6 @@ local function gmatch_backward(pat, opts)
   local curpos = vim.fn.getcurpos()
   local currow, curcol = curpos[2] - 1, curpos[3] - 1
   local match_curline = gmatch_lines(pat, 0, currow, currow + 1, opts)
-  local match_prevlines = gmatch_lines(pat, 0, vim.fn.getpos("w0")[2] - 1, currow, opts)
   local ret = {}
   for _, m in pairs(match_curline) do
     local filtered = {} ---@type colrange[]
@@ -96,6 +101,12 @@ local function gmatch_backward(pat, opts)
     end
     table.insert(ret, { currow, filtered })
   end
+  if opts.nlines == 1 then
+    return ret
+  end
+  local n_min = vim.fn.getpos("w0")[2] - 1
+  local n = (opts.nlines == nil or opts.nlines < 1) and n_min or math.max(currow - opts.nlines + 1, n_min)
+  local match_prevlines = gmatch_lines(pat, 0, n, currow, opts)
   for _, m in pairs(match_prevlines) do
     table.insert(ret, m)
   end
