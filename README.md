@@ -8,7 +8,8 @@ Leap onto a specified search pattern.
 
 ### Optional
 
-- [leap-wide.nvim](https://github.com/atusy/leap-wide.nvim)
+- [leap-wide.nvim](https://github.com/atusy/leap-wide.nvim) for labelling on multi-width characters.
+- [repeat.vim](https://github.com/tpope/vim-repeat) for dot repeats
 
 ## Usage
 
@@ -54,6 +55,38 @@ require("leap-search").leap(
   },
   { target_windows = { vim.api.nvim_get_current_win() } }
 )
+```
+
+### f/t-motions
+
+For dot-repeating, install [repeat.vim](https://github.com/tpope/vim-repeat).
+
+``` lua
+local function motion(offset, backward)
+  local pat = vim.fn.getcharstr()
+  require("leap-search").leap(pat, {
+    engines = {
+      { name = "string.find", ignorecase = false, plain = true, nlines = 1 },
+      -- { name = "kensaku.query", nlines = 1 }, -- to search Japanese string with romaji with https://github.com/lambdalisue/kensaku.vim
+    },
+    prefix_label = false,
+  }, {
+    backward = backward,
+  })
+end
+
+vim.keymap.set({ "n", "x", "o" }, "f", function()
+  motion(0, false)
+end)
+vim.keymap.set({ "n", "x", "o" }, "F", function()
+  motion(0, true)
+end)
+vim.keymap.set({ "n", "x", "o" }, "t", function()
+  motion(-1, false)
+end)
+vim.keymap.set({ "n", "x", "o" }, "T", function()
+  motion(1, true)
+end)
 ```
 
 ![](https://user-images.githubusercontent.com/30277794/239579838-f8c57d99-04e6-4e47-a3ad-4231322cd782.gif)
