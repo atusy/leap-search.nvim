@@ -8,7 +8,7 @@ Leap onto a specified search pattern.
 
 ### Optional
 
-- [leap-wide.nvim](https://github.com/atusy/leap-wide.nvim) for labelling on multi-width characters.
+- [leap-wide.nvim](https://github.com/atusy/leap-wide.nvim) for labelling on multi-width characters on nvim <= 0.9
 - [repeat.vim](https://github.com/tpope/vim-repeat) for dot repeats
 
 ## Usage

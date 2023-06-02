@@ -28,6 +28,8 @@ local opts_match_default = {
   priority = priority(),
 }
 
+local nvim_0_10 = vim.fn.has("nvim-0.10") == 1
+
 ---@param pat string | fun(): string
 ---@param opts_match Opts_match?
 ---@param opts_leap table?
@@ -67,16 +69,20 @@ local function leap_main(pat, opts_match, opts_leap)
         priority = _opts_match.priority,
       })
       if _opts_match.prefix_label ~= false and col > 1 then
-        t.pos[2] = col - 1
+        local first, last = vim.regex(".$"): match_line(0, row, 0, col - 1)
+        t.pos[2] = col - last + first + 1
         t.offset = 1
       end
     end
 
     vim.api.nvim_create_autocmd("User", { pattern = "LeapLeave", callback = del })
 
-    local ok, w = pcall(require, "leap-wide")
-    if ok then
-      w.fix_labelling()
+    if not nvim_0_10 then
+      -- maybe fixed by https://github.com/neovim/neovim/pull/23757
+      local ok, w = pcall(require, "leap-wide")
+      if ok then
+        w.fix_labelling()
+      end
     end
 
     if _opts_match.on_targets then
