@@ -43,7 +43,7 @@ local function leap_main(pat, opts_match, opts_leap)
   local bufs = {}
   local function del()
     for b, _ in pairs(bufs) do
-      vim.api.nvim_buf_clear_namespace(b, ns, 0, -1)
+      pcall(vim.api.nvim_buf_clear_namespace, b, ns, 0, -1)
     end
   end
 
