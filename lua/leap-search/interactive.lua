@@ -81,7 +81,7 @@ end
 
 local function leap_interactive(leap)
   -- use injection to avoid looped dependencies
-  return function(_, opts_match, opts_leap)
+  return function(pat, opts_match, opts_leap)
     local _opts_leap = vim.tbl_deep_extend("keep", opts_leap or {}, {
       action = function(t)
         if t.label == nil or labels2[t.label] then
@@ -96,7 +96,7 @@ local function leap_interactive(leap)
     vim.fn.getcharstr = getcharstr2
 
     --leap interactively
-    local ok, res = leap_interactive_core(leap, nil, opts_match, _opts_leap)
+    local ok, res = leap_interactive_core(leap, pat, opts_match, _opts_leap)
 
     --finish
     clean()
