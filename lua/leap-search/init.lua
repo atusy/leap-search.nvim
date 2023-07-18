@@ -68,10 +68,10 @@ local function leap_main(pat, opts_match, opts_leap)
         hl_group = _opts_match.hl_group,
         priority = _opts_match.priority,
       })
-      if _opts_match.prefix_label ~= false and col > 1 then
-        local first, last = vim.regex(".$"):match_line(0, row, 0, col - 1)
-        t.pos[2] = col - last + first + 1
-        t.offset = 1
+      if _opts_match.prefix_label ~= false and col > 0 then
+        local first, last = vim.regex(".$"):match_line(0, row, 0, col)
+        t.offset = last - first
+        t.pos[2] = col - t.offset + 1
       end
     end
 
